@@ -1,0 +1,14 @@
+#Flask API
+/Flask-API/notes_about_running.txt
+/Flask-API/__pycache__/
+/Flask-API/architecture_diagram.png
+
+#Root
+plan.txt
+
+#Client-Side Application
+/bookcharityapp/app_template_image.png
+/bookcharityapp/src/bookcharityapp/res/cache_data/book_cache.json
+/bookcharityapp/src/bookcharityapp/__pycache__/
+/bookcharityapp/logs/
+/bookcharityapp/.briefcase/
