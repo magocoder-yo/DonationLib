@@ -6,7 +6,7 @@ import json
 
 from pathlib import Path
 
-SERVER_URL = "donationlib-production.up.railway.app"
+SERVER_URL = "donationlib-production-92126518.up.railway.app"
 
 class BookCharityApp(toga.App):
     def startup(self):
@@ -111,7 +111,7 @@ class BookCharityApp(toga.App):
         
         params = {'userid': userID, 'password': userPW}
 
-        response = requests.post(f"http://{SERVER_URL}/authuser", params=params)
+        response = requests.post(f"https://{SERVER_URL}/authuser", params=params)
 
         if response.status_code == 401:
             #Invalid credentials
@@ -191,7 +191,7 @@ class BookCharityApp(toga.App):
         request_params["city"] = self.account_city_input.value
         request_params["password"] = self.account_pw_input.value
 
-        response = requests.post(f"http://{SERVER_URL}/adduser", params=request_params)
+        response = requests.post(f"https://{SERVER_URL}/adduser", params=request_params)
 
         if response.status_code == 201:
             result = response.json()
@@ -225,7 +225,7 @@ class LibraryPage:
     def load_page(self, widget):
         self.main_page_box.clear()
 
-        self.user_info = requests.get(f"http://{SERVER_URL}/user/{self.userID}").json()
+        self.user_info = requests.get(f"https://{SERVER_URL}/user/{self.userID}").json()
 
         lib_header = toga.Label("Your books:", font_weight="bold", text_align="center", font_size=23)
         self.main_page_box.add(lib_header)
@@ -245,7 +245,7 @@ class LibraryPage:
         
         book_cache_path.touch()
 
-        response = requests.get(f"http://{SERVER_URL}/user/{self.userID}/books").json()
+        response = requests.get(f"https://{SERVER_URL}/user/{self.userID}/books").json()
 
         with open(book_cache_path, "w") as f:
             f.write(json.dumps(response))
@@ -307,7 +307,7 @@ class LibraryPage:
         
         params = {'name': self.name_input.value, 'grade_level': self.grade_level, 'edition': self.edition, 'status': self.status_input.value.name}
 
-        response = requests.post(f"http://{SERVER_URL}/user/{self.userID}/addbook", params=params)
+        response = requests.post(f"https://{SERVER_URL}/user/{self.userID}/addbook", params=params)
 
         if response.status_code == 201:
             #Success
@@ -393,9 +393,9 @@ class Book(toga.Box):
         user_info = self.parent_instance.user_info
 
         if self.book_data['edition'] == 1:
-            response = requests.get(f"http://{SERVER_URL}/{user_info['city']}/find_match/{self.book_data['name']}")
+            response = requests.get(f"https://{SERVER_URL}/{user_info['city']}/find_match/{self.book_data['name']}")
         else:
-            response = requests.get(f"http://{SERVER_URL}/{user_info['city']}/find_match/{self.book_data['name']}/edition/{self.book_data['edition']}")
+            response = requests.get(f"https://{SERVER_URL}/{user_info['city']}/find_match/{self.book_data['name']}/edition/{self.book_data['edition']}")
 
         if response.status_code != 200:
             await self.parent_instance.app.main_window.dialog(
@@ -438,9 +438,9 @@ class Book(toga.Box):
         target_school = widget.text[19:]
         
         if self.book_data['edition'] == 1:
-            response = requests.get(f"http://{SERVER_URL}/from/{self.parent_instance.userID}/to/{target_school}/pledge/{self.book_data['name']}")
+            response = requests.get(f"https://{SERVER_URL}/from/{self.parent_instance.userID}/to/{target_school}/pledge/{self.book_data['name']}")
         else:
-            response = requests.get(f"http://{SERVER_URL}/from/{self.parent_instance.userID}/to/{target_school}/pledge/{self.book_data['name']}/edition/{self.book_data['edition']}")
+            response = requests.get(f"https://{SERVER_URL}/from/{self.parent_instance.userID}/to/{target_school}/pledge/{self.book_data['name']}/edition/{self.book_data['edition']}")
 
         if response.status_code != 200:
             await self.parent_instance.app.main_window.dialog(
@@ -458,7 +458,7 @@ class Book(toga.Box):
         user_ID = self.parent_instance.userID
         book_ID = self.book_data['id']
 
-        response = requests.post(f"http://{SERVER_URL}/user/{user_ID}/removebook/{book_ID}")
+        response = requests.post(f"https://{SERVER_URL}/user/{user_ID}/removebook/{book_ID}")
 
         if response.status_code != 200:
             await self.parent_instance.app.main_window.dialog(
@@ -475,7 +475,7 @@ class Book(toga.Box):
     async def deliver_book(self, widget):
         book_ID = self.book_data['id']
 
-        response = requests.post(f"http://{SERVER_URL}/deliver_book/{book_ID}")
+        response = requests.post(f"https://{SERVER_URL}/deliver_book/{book_ID}")
 
         if response.status_code != 200:
             await self.parent_instance.app.main_window.dialog(
@@ -492,7 +492,7 @@ class Book(toga.Box):
     async def confirm_delivery(self, widget):
         book_ID = self.book_data['id']
 
-        response = requests.post(f"http://{SERVER_URL}/confirm_delivery/{book_ID}")
+        response = requests.post(f"https://{SERVER_URL}/confirm_delivery/{book_ID}")
 
         if response.status_code != 200:
             await self.parent_instance.app.main_window.dialog(
@@ -527,7 +527,7 @@ class AccountPage:
     def load_page(self, widget):
         self.main_page_box.clear()
 
-        response = requests.get(f"http://{SERVER_URL}/user/{self.userID}").json()
+        response = requests.get(f"https://{SERVER_URL}/user/{self.userID}").json()
 
         label = toga.Label("Account Information", font_weight="bold", text_align="center", font_size=23)
         self.main_page_box.add(label)
